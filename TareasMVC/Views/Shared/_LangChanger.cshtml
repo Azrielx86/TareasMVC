@@ -1,0 +1,21 @@
+@using Microsoft.AspNetCore.Localization
+@using Microsoft.AspNetCore.Mvc.Localization
+@using TareasMVC.Services
+@inject IViewLocalizer ViewLocalizer
+
+@{
+    var request = Context.Features.Get<IRequestCultureFeature>();
+    var returnUrl = string.IsNullOrEmpty(Context.Request.Path) ? "~/" : $"~{Context.Request.Path.Value}";
+}
+
+<form asp-controller="Home" asp-action="ChangeLanguage"
+      asp-route-returnUrl="@returnUrl" method="post" class="form-horizontal"
+      role="form" style="display: inline">
+    <label for="@ViewLocalizer["Language"]"></label>
+    <select name="culture" id="culture"
+            onchange="this.form.submit()"
+            asp-items="Constants.SupportedLanguages"
+            asp-for="@request!.RequestCulture.UICulture.Name">
+    </select>
+
+</form>

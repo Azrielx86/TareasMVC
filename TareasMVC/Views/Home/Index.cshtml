@@ -1,0 +1,57 @@
+﻿@using Microsoft.AspNetCore.Mvc.Localization
+@inject IViewLocalizer Localizer
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<div class="text-center">
+    <h1 class="display-4">@Localizer["MyTasks"]</h1>
+    <button type="button" class="btn btn-primary mb-3" onclick="addNewTask()">@Localizer["AddNewTask"]</button>
+</div>
+
+<div id="task-container" class="text-center">
+    <div class="text-start" data-bind="foreach: tasks">
+        <div name="task" class="border mb-2 p-2" style="cursor: pointer">
+            <div class="fw-bold" data-bind="text: title, hidden: isNew"></div>
+            <input type="text" name="task-title" data-bind="value: title, visible: isNew, event: {focusout: manageFocusOutTaskTitle}" autocomplete="off">
+        </div>
+    </div>
+
+    <div data-bind="visible: loading" class="spinner-border">
+        <span class="visually-hidden">Loading</span>
+    </div>
+
+    <div data-bind="visible: noTasks">
+        @Localizer["NoTasksToShow"]
+    </div>
+</div>
+
+@section Scripts
+{
+    <script src="~/js/tasks.js" asp-append-version="true"></script>
+    <script>
+        function taskListViewModelFn() {
+            const self = this;
+            self.tasks = ko.observableArray([])
+            self.loading = ko.observable(true)
+            self.noTasks = ko.pureComputed(() => {
+                if (self.loading()) return false;
+                return self.tasks().length === 0;
+            });
+        }
+
+        function taskElementViewModel({id, title}) {
+            const self = this;
+            self.id = ko.observable(id)
+            self.title = ko.observable(title)
+            self.isNew = ko.pureComputed(() => self.id() === 0)
+        }
+
+        const taskListViewModel = new taskListViewModelFn();
+
+        getTasks();
+
+        ko.applyBindings(taskListViewModel, document.getElementById("task-container"));
+    </script>
+}

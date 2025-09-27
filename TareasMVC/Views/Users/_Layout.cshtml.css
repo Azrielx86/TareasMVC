@@ -1,0 +1,10 @@
+div.main-page {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+div.appname-section {
+    margin-right: 5rem;
+}

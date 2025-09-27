@@ -1,0 +1,43 @@
+@model UserListViewModel
+
+@{
+    ViewData["Title"] = "User List";
+    Layout = "../Shared/_Layout";
+}
+
+<h1>User list</h1>
+
+@if (Model.Message is not null)
+{
+    <div class="alert alert-success" role="alert">
+        @Model.Message
+    </div>
+}
+
+@if (Model.Users.Count > 0)
+{
+    <form method="post">
+        <table class="table table-hover table-bordered table-striped">
+            <thead>
+            <tr>
+                <th>Action</th>
+                <th>Email</th>
+            </tr>
+            </thead>
+            <tbody>
+            @foreach (var user in Model.Users)
+            {
+                <tr>
+                    <td>
+                        <button class="btn btn-success" asp-action="DoAdmin" asp-route-email="@user.Email">Do Admin</button>
+                        <button class="btn btn-secondary" asp-action="RevokeAdmin" asp-route-email="@user.Email">Remove Admin</button>
+                    </td>
+                    <td>
+                        <span>@user.Email</span>
+                    </td>
+                </tr>
+            }
+            </tbody>
+        </table>
+    </form>
+}
